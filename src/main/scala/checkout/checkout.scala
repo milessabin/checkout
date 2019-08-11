@@ -10,9 +10,17 @@ object Checkout {
     case object Orange extends Item
   }
 
-  def price(basket: List[Item]): Int = {
+  case class Reduction(n: Int, d: Int) {
+    def apply(items: Int) = ((items / n) * d) + (items % n)
+  }
+
+  object Reduction {
+    val None = Reduction(1, 1)
+  }
+
+  def price(basket: List[Item], appleReduction: Reduction = Reduction.None, orangeReduction: Reduction = Reduction.None): Int = {
     val apples = basket.count(_ == Item.Apple)
     val oranges = basket.count(_ == Item.Orange)
-    (apples*applePrice)+(oranges*orangePrice)
+    (appleReduction(apples)*applePrice)+(orangeReduction(oranges)*orangePrice)
   }
 }
